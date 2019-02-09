@@ -94,7 +94,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   bool box8_correct = false;
 
   bool box8_keptinLeft = false;
-
+  bool box3_keptinRight = false;
 
   void _changed(bool visibility, String field) {
     setState(() {
@@ -232,7 +232,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       style: new TextStyle(
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF7F7219))))),
-
           Positioned(
             left: leftpremise.dx + 150,
             top: leftpremise.dy - height - 85,
@@ -782,7 +781,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-
           Positioned(
             left: position1.dx,
             top: position1.dy - height + 60,
@@ -834,6 +832,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 width: 100.0,
                 height: 50.0,
               ),
+              maxSimultaneousDrags: 9,
+
               onDraggableCanceled: (Velocity velocity, Offset offset) {
                 BoxLeftP1 = false;
                 BoxMain1 = false;
@@ -865,9 +865,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       rightpremise.dx + 200, rightpremise.dy - height - 45));
                 }
                 if (box_leftsecrowleftpremise1) {
-                  if(box8_keptinLeft){
+                  if (box8_keptinLeft) {
                     box1_correct = true;
-                  }else
+                  } else
                     box1_correct = false;
                   setState(() =>
                   position1 = Offset(
@@ -875,9 +875,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       leftsecrowleftpremise.dy - height - 45));
                 }
                 if (box_leftsecrowrightpremise1) {
-                  if(box8_keptinLeft){
+                  if (box8_keptinLeft) {
                     box1_correct = true;
-                  }else
+                  } else
                     box1_correct = false;
                   setState(() =>
                   position1 = Offset(
@@ -885,9 +885,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       leftsecrowrightpremise.dy - height - 45));
                 }
                 if (box_rightsecrowleftpremise1) {
-                  if(box8_keptinLeft){
+                  if (box8_keptinLeft) {
                     box1_correct = false;
-                  }else
+                  } else
                     box1_correct = true;
                   setState(() =>
                   position1 = Offset(
@@ -895,9 +895,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       rightsecrowleftpremise.dy - height - 45));
                 }
                 if (box_rightsecrowrightpremise1) {
-                  if(box8_keptinLeft){
+                  if (box8_keptinLeft) {
                     box1_correct = false;
-                  }else
+                  } else
                     box1_correct = true;
                   setState(() =>
                   position1 = Offset(
@@ -1083,6 +1083,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               },
               onDragCompleted: () {
                 if (BoxLeftP3) {
+                  box3_keptinRight = false;
                   box3_correct = true;
                   setState(() =>
                   position3 = Offset(
@@ -1095,6 +1096,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       Offset(MainClaim.dx + 400, MainClaim.dy - height - 70));
                 }
                 if (BoxRightP3) {
+                  box3_keptinRight = true;
                   box3_correct = true;
                   setState(() =>
                   position3 = Offset(
@@ -1206,28 +1208,56 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       rightpremise.dx + 330, rightpremise.dy - height - 105));
                 }
                 if (box_leftsecrowleftpremise4) {
-                  box4_correct = false;
+                  if (!box8_keptinLeft) {
+                    box4_correct = true;
+                  }
+
+                  if (box3_keptinRight) {
+                    box4_correct = false;
+                  } else
+                    box4_correct = true;
+
                   setState(() =>
                   position4 = Offset(
                       leftsecrowleftpremise.dx + 260,
                       leftsecrowleftpremise.dy - height - 105));
                 }
                 if (box_leftsecrowrightpremise4) {
-                  box4_correct = false;
+                  if (!box8_keptinLeft) {
+                    box4_correct = true;
+                  }
+                  if (box3_keptinRight) {
+                    box4_correct = false;
+                  } else
+                    box4_correct = true;
+
                   setState(() =>
                   position4 = Offset(
                       leftsecrowrightpremise.dx + 260,
                       leftsecrowrightpremise.dy - height - 105));
                 }
                 if (box_rightsecrowleftpremise4) {
-                  box4_correct = true;
+                  if (box8_keptinLeft) {
+                    box4_correct = false;
+                  }
+                  if (box3_keptinRight) {
+                    box4_correct = true;
+                  } else
+                    box4_correct = false;
+
                   setState(() =>
                   position4 = Offset(
                       rightsecrowleftpremise.dx + 260,
                       rightsecrowleftpremise.dy - height - 105));
                 }
                 if (box_rightsecrowrightpremise4) {
-                  box4_correct = true;
+                  if (box8_keptinLeft) {
+                    box4_correct = false;
+                  }
+                  if (box3_keptinRight) {
+                    box4_correct = true;
+                  } else
+                    box4_correct = false;
                   setState(() =>
                   position4 = Offset(
                       rightsecrowrightpremise.dx + 260,
@@ -1450,28 +1480,52 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       rightpremise.dx + 200, rightpremise.dy - height - 85));
                 }
                 if (box_leftsecrowleftpremise6) {
-                  box6_correct = false;
+                  if (!box8_keptinLeft) {
+                    box6_correct = true;
+                  }
+                  if (box3_keptinRight) {
+                    box6_correct = false;
+                  } else
+                    box6_correct = true;
                   setState(() =>
                   position6 = Offset(
                       leftsecrowleftpremise.dx + 130,
                       leftsecrowleftpremise.dy - height - 85));
                 }
                 if (box_leftsecrowrightpremise6) {
-                  box6_correct = false;
+                  if (!box8_keptinLeft) {
+                    box6_correct = true;
+                  }
+                  if (box3_keptinRight) {
+                    box6_correct = false;
+                  } else
+                    box6_correct = true;
                   setState(() =>
                   position6 = Offset(
                       leftsecrowrightpremise.dx + 130,
                       leftsecrowrightpremise.dy - height - 85));
                 }
                 if (box_rightsecrowleftpremise6) {
-                  box6_correct = true;
+                  if (box8_keptinLeft) {
+                    box6_correct = false;
+                  }
+                  if (box3_keptinRight) {
+                    box6_correct = true;
+                  } else
+                    box6_correct = false;
                   setState(() =>
                   position6 = Offset(
                       rightsecrowleftpremise.dx + 130,
                       rightsecrowleftpremise.dy - height - 85));
                 }
                 if (box_rightsecrowrightpremise6) {
-                  box6_correct = true;
+                  if (box8_keptinLeft) {
+                    box6_correct = false;
+                  }
+                  if (box3_keptinRight) {
+                    box6_correct = true;
+                  } else
+                    box6_correct = false;
                   setState(() =>
                   position6 = Offset(
                       rightsecrowrightpremise.dx + 130,
@@ -1799,6 +1853,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     if (box1_correct && box3_correct && box4_correct &&
         box5_correct && box6_correct && box7_correct && box8_correct) {
       _changed(true, "headingmaincorrect");
+      _changed(false, "headingmain");
     } else {
       _changed(true, "headingmain");
     }
