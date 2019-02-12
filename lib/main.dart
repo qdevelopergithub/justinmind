@@ -239,7 +239,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       child: new RaisedButton(
         onPressed: () {
           setState(() {
-            (retrytimes > 3) ? _showSnackBar("You lose") : Retry();
+            (retrytimes > 2) ? null : Retry();
           });
           retrytimes++;
         },
@@ -1890,6 +1890,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void ShowSolution() {
+    _changed(true, "submit");
+    _changed(false, "retry");
     setState(() =>
     position1 = Offset(leftsecrowleftpremise.dx + 130,
         leftsecrowleftpremise.dy - height - 45));
@@ -1913,10 +1915,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         Offset(MainClaim.dx + 270, MainClaim.dy - height - 50));
     setState(() =>
     position8 = Offset(leftpremise.dx + 150, leftpremise.dy - height - 85));
+    setState(() => position2 = Offset(width - 80, height + 125));
   }
 
   void Retry() {
+
     _changed(true, "retry");
+    _changed(false, "heading1");
+    _changed(false, "heading2");
 
     if (!box1_correct) {
       setState(() => position1 = Offset(width - 80, height + 55));
@@ -1949,11 +1955,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     } else {
       _changed(true, "headingmain");
       if (retrytimes == 1) {
-        _showSnackBar("This will be your 2nd try");
+        _showSnackBar("This will be your last try");
       } else if (retrytimes == 2) {
-        _showSnackBar("This will be your Last try");
-      }else if (retrytimes>3){
-        _changed(false, "retry");
+        _showSnackBar("You lose");
       }
     }
   }
@@ -1969,7 +1973,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       _changed(true, "headingmaincorrect");
       _changed(false, "headingmain");
     } else {
-      _showSnackBar("You will get three tries before you lose. This is your 1st try");
+      _showSnackBar(
+          "You will get three tries before you lose. Take your 2nd try");
       _changed(true, "headingmain");
     }
   }
