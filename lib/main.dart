@@ -8,6 +8,28 @@ void main() {
       title: 'Justinmind')));
 }
 
+class Countdown extends AnimatedWidget {
+  Countdown({ Key key, this.animation })
+      : super(key: key, listenable: animation);
+  Animation<int> animation;
+
+  @override
+  build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(left: 230.0, top: 20.0),
+        child: new Row(
+          children: <Widget>[
+            new Text(
+              animation.value.toString(),
+              style: new TextStyle(fontSize: 40.0),
+            ),
+            new Text(" secs"),
+          ],
+        )
+    );
+  }
+}
+
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
@@ -15,10 +37,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
+  static int retrytimes = 1;
+  final GlobalKey<ScaffoldState> _scaffoldstate = new GlobalKey<
+      ScaffoldState>();
+  AnimationController _controller;
+  static const int kStartValue = 3600;
+
   bool headingg1 = true;
   bool headingg2 = true;
   bool headingmain = false;
   bool headingmaincorrect = false;
+  bool submit = true;
+  bool rettry = false;
 
   bool BoxLeftP1 = false;
   bool BoxLeftP2 = false;
@@ -110,6 +140,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       if (field == "headingmaincorrect") {
         headingmaincorrect = visibility;
       }
+      if (field == "submit") {
+        submit = visibility;
+      }
+      if (field == "retry") {
+        rettry = visibility;
+      }
     });
   }
 
@@ -118,15 +154,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Offset position1, position2, position3, position4, position5, position6,
       position7, position8, MainClaim, arrow,
       leftpremise, mainclaimtext, leftpremisetext, rightpremisetext,
-      rightpremise, submitbtn, exit, leftsecrowleftpremise, showsolution,
+      rightpremise, submitbtn, retry, exit, leftsecrowleftpremise, showsolution,
       leftsecrowrightpremise,
       rightsecrowleftpremise, rightsecrowrightpremise;
-
-  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    _controller = new AnimationController(
+      vsync: this,
+      duration: new Duration(seconds: kStartValue),
+    );
+    _controller.forward(from: 0.0);
     position1 = Offset(width - 80, height + 55);
     position2 = Offset(width - 80, height + 125);
     position3 = Offset(width + 50, height + 115);
@@ -140,6 +179,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     leftpremise = Offset(width + 60, height + 220);
     rightpremise = Offset(width + 250, height + 220);
     submitbtn = Offset(width + 430, height + 200);
+    retry = Offset(width + 430, height + 200);
     exit = Offset(width + 500, height + 80);
     showsolution = Offset(width + 210, height + 300);
     mainclaimtext = Offset(width + 280, height + 93);
@@ -149,6 +189,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     leftsecrowrightpremise = Offset(width + 140, height + 325);
     rightsecrowleftpremise = Offset(width + 260, height + 325);
     rightsecrowrightpremise = Offset(width + 380, height + 325);
+  }
+
+  void _showSnackBar(String value) {
+    if (value.isEmpty) return;
+    _scaffoldstate.currentState.showSnackBar(
+        new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -170,6 +216,39 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         textAlign: TextAlign.center,
         style: new TextStyle(
             fontSize: 12.0, color: const Color(0xFF333333)),
+      ),
+    ) : new Container();
+
+    var submitt = submit ? Container(
+      margin: EdgeInsets.only(
+          top: submitbtn.dy - height + 100, left: submitbtn.dx),
+      child: new RaisedButton(
+        onPressed: Submit,
+        textColor: Colors.white,
+        color: const Color(0xFF1a0d71),
+        padding: const EdgeInsets.all(8.0),
+        child: new Text(
+          "Submit!",
+        ),
+      ),
+    ) : new Container();
+
+    var retryy = rettry ? Container(
+      margin: EdgeInsets.only(
+          top: retry.dy - height + 100, left: retry.dx),
+      child: new RaisedButton(
+        onPressed: () {
+          setState(() {
+            (retrytimes > 3) ? _showSnackBar("You lose") : Retry();
+          });
+          retrytimes++;
+        },
+        textColor: Colors.white,
+        color: const Color(0xFF1a0d71),
+        padding: const EdgeInsets.all(8.0),
+        child: new Text(
+          "Retry",
+        ),
       ),
     ) : new Container();
 
@@ -199,7 +278,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     config();
 
     return new Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldstate,
       backgroundColor: const Color(0xFFF0EFF5),
       body: Stack(
         children: <Widget>[
@@ -740,20 +819,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   )
               )
           ),
-          Positioned(
-            left: submitbtn.dx,
-            top: submitbtn.dy - height + 100,
-            child: new RaisedButton(
-              onPressed: Submit,
-              textColor: Colors.white,
-              color: const Color(0xFF1a0d71),
-              padding: const EdgeInsets.all(8.0),
-              child: new Text(
-                "Submit!",
-              ),
+          Container(
+            child: new Row(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    submitt,
+                    retryy
+                  ],
+                ),
+              ],
             ),
           ),
-
           Positioned(
             left: exit.dx,
             top: exit.dy - height - 60,
@@ -1782,21 +1859,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           Container(
             child: new Row(
               children: <Widget>[
-                /* Container(
-                  margin: EdgeInsets.only(top: 30.0, left: 3.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset(
-                        'assets/fox.png',
-                    sdfsdfsdf    width: 80.0,
-                        height: 80.0,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(width: 100.0, height: 40,),
-                    ],
-                  ),
-                ),*/
                 Column(
                   children: <Widget>[
                     heading1,
@@ -1808,7 +1870,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               ],
             ),
           ),
+          new Countdown(
+            animation: new StepTween(
+              begin: 0,
+              end: kStartValue,
+            ).animate(_controller),
+          ),
         ],
+
       ),
     );
   }
@@ -1846,17 +1915,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     position8 = Offset(leftpremise.dx + 150, leftpremise.dy - height - 85));
   }
 
-  void Submit() {
-    _changed(false, "heading1");
-    _changed(false, "heading2");
+  void Retry() {
+    _changed(true, "retry");
 
-    if (box1_correct && box3_correct && box4_correct &&
-        box5_correct && box6_correct && box7_correct && box8_correct) {
-      _changed(true, "headingmaincorrect");
-      _changed(false, "headingmain");
-    } else {
-      _changed(true, "headingmain");
-    }
     if (!box1_correct) {
       setState(() => position1 = Offset(width - 80, height + 55));
     }
@@ -1880,6 +1941,36 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     }
     if (!box8_correct) {
       setState(() => position8 = Offset(width + 30, height + 195));
+    }
+    if (box1_correct && box3_correct && box4_correct &&
+        box5_correct && box6_correct && box7_correct && box8_correct) {
+      _changed(false, "headingmain");
+      _changed(true, "headingmaincorrect");
+    } else {
+      _changed(true, "headingmain");
+      if (retrytimes == 1) {
+        _showSnackBar("This will be your 2nd try");
+      } else if (retrytimes == 2) {
+        _showSnackBar("This will be your Last try");
+      }else if (retrytimes>3){
+        _changed(false, "retry");
+      }
+    }
+  }
+
+  void Submit() {
+    _changed(false, "heading1");
+    _changed(false, "heading2");
+    _changed(false, "submit");
+    _changed(true, "retry");
+
+    if (box1_correct && box3_correct && box4_correct &&
+        box5_correct && box6_correct && box7_correct && box8_correct) {
+      _changed(true, "headingmaincorrect");
+      _changed(false, "headingmain");
+    } else {
+      _showSnackBar("You will get three tries before you lose. This is your 1st try");
+      _changed(true, "headingmain");
     }
   }
 
