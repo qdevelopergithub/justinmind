@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io';
 
 void main() {
   runApp((new MaterialApp(
@@ -48,7 +49,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   bool headingmain = false;
   bool headingmaincorrect = false;
   bool submit = true;
+  bool submitgrey = false;
   bool rettry = false;
+  bool reset = false;
 
   bool BoxLeftP1 = false;
   bool BoxLeftP2 = false;
@@ -146,6 +149,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       if (field == "retry") {
         rettry = visibility;
       }
+      if (field == "submitgreyy") {
+        submitgrey = visibility;
+      }
+      if (field == "reset") {
+        reset = visibility;
+      }
     });
   }
 
@@ -154,7 +163,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Offset position1, position2, position3, position4, position5, position6,
       position7, position8, MainClaim, arrow,
       leftpremise, mainclaimtext, leftpremisetext, rightpremisetext,
-      rightpremise, submitbtn, retry, exit, leftsecrowleftpremise, showsolution,
+      rightpremise, submitbtn,resetbtn, submitbtngrey, retry, exit,
+      leftsecrowleftpremise, showsolution,
       leftsecrowrightpremise,
       rightsecrowleftpremise, rightsecrowrightpremise;
 
@@ -179,6 +189,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     leftpremise = Offset(width + 60, height + 220);
     rightpremise = Offset(width + 250, height + 220);
     submitbtn = Offset(width + 430, height + 200);
+    resetbtn = Offset(width + 430, height + 200);
+    submitbtngrey = Offset(width + 430, height + 200);
     retry = Offset(width + 430, height + 200);
     exit = Offset(width + 500, height + 80);
     showsolution = Offset(width + 210, height + 300);
@@ -228,7 +240,35 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         color: const Color(0xFF1a0d71),
         padding: const EdgeInsets.all(8.0),
         child: new Text(
-          "Submit!",
+          "Submit",
+        ),
+      ),
+    ) : new Container();
+
+    var resett = reset ? Container(
+      margin: EdgeInsets.only(
+          top: resetbtn.dy - height + 100, left: resetbtn.dx),
+      child: new RaisedButton(
+        onPressed: Reset,
+        textColor: Colors.white,
+        color: const Color(0xFF1a0d71),
+        padding: const EdgeInsets.all(8.0),
+        child: new Text(
+          "Reset",
+        ),
+      ),
+    ) : new Container();
+
+    var submittgrey = submitgrey ? Container(
+      margin: EdgeInsets.only(
+          top: submitbtngrey.dy - height + 100, left: submitbtngrey.dx),
+      child: new RaisedButton(
+        onPressed: submitgreymethod,
+        textColor: Colors.white,
+        color: const Color(0xFF808080),
+        padding: const EdgeInsets.all(8.0),
+        child: new Text(
+          "Submit",
         ),
       ),
     ) : new Container();
@@ -239,7 +279,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       child: new RaisedButton(
         onPressed: () {
           setState(() {
-            (retrytimes > 2) ? null : Retry();
+            (retrytimes > 3) ? null : Retry();
           });
           retrytimes++;
         },
@@ -825,7 +865,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 Column(
                   children: <Widget>[
                     submitt,
-                    retryy
+                    submittgrey,
+                    retryy,
+                    resett
                   ],
                 ),
               ],
@@ -909,8 +951,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 width: 100.0,
                 height: 50.0,
               ),
-              maxSimultaneousDrags: 9,
-
               onDraggableCanceled: (Velocity velocity, Offset offset) {
                 BoxLeftP1 = false;
                 BoxMain1 = false;
@@ -921,6 +961,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise1 = false;
                 box_rightsecrowrightpremise1 = false;
                 setState(() => position1 = Offset(width - 80, height + 55));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
               onDragCompleted: () {
                 if (BoxLeftP1) {
@@ -1093,6 +1136,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise2 = false;
                 box_rightsecrowrightpremise2 = false;
                 setState(() => position2 = Offset(width - 80, height + 125));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1157,6 +1203,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_leftsecrowrightpremise3 = false;
                 box_rightsecrowrightpremise3 = false;
                 setState(() => position3 = Offset(width + 50, height + 115));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
               onDragCompleted: () {
                 if (BoxLeftP3) {
@@ -1351,6 +1400,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise4 = false;
                 box_rightsecrowrightpremise4 = false;
                 setState(() => position4 = Offset(width + 50, height + 175));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1479,6 +1531,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise5 = false;
                 box_rightsecrowrightpremise5 = false;
                 setState(() => position5 = Offset(width + 30, height + 15));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1619,6 +1674,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise6 = false;
                 box_rightsecrowrightpremise6 = false;
                 setState(() => position6 = Offset(width + 30, height + 75));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1735,6 +1793,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise7 = false;
                 box_rightsecrowrightpremise7 = false;
                 setState(() => position7 = Offset(width + 30, height + 135));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1853,6 +1914,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 box_rightsecrowleftpremise8 = false;
                 box_rightsecrowrightpremise8 = false;
                 setState(() => position8 = Offset(width + 30, height + 195));
+                _changed(true, "submit");
+                _changed(false, "retry");
+                _changed(false, "submitgreyy");
               },
             ),
           ),
@@ -1877,21 +1941,39 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ).animate(_controller),
           ),
         ],
-
       ),
     );
   }
 
   void Exit() {
+   SystemNavigator.pop();
+  }
+
+  void Reset(){
+    _changed(false, "reset");
+    _changed(false, "headingmaincorrect");
     _changed(true, "heading1");
     _changed(true, "heading2");
-    _changed(false, "headingmain");
-    _changed(false, "headingmaincorrect");
+    _changed(true, "submit");
+    setState(() => position1 = Offset(width - 80, height + 55));
+    setState(() => position2 = Offset(width - 80, height + 125));
+    setState(() => position3 = Offset(width + 50, height + 115));
+    setState(() => position4 = Offset(width + 50, height + 175));
+    setState(() => position5 = Offset(width + 30, height + 15));
+    setState(() => position6 = Offset(width + 30, height + 75));
+    setState(() => position7 = Offset(width + 30, height + 135));
+    setState(() => position8 = Offset(width + 30, height + 195));
   }
 
   void ShowSolution() {
-    _changed(true, "submit");
+    _changed(false, "submit");
     _changed(false, "retry");
+    _changed(false, "submitgreyy");
+    _changed(false, "heading1");
+    _changed(false, "heading2");
+    _changed(true, "headingmaincorrect");
+    _changed(true, "reset");
+
     setState(() =>
     position1 = Offset(leftsecrowleftpremise.dx + 130,
         leftsecrowleftpremise.dy - height - 45));
@@ -1919,63 +2001,172 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void Retry() {
-
-    _changed(true, "retry");
     _changed(false, "heading1");
     _changed(false, "heading2");
 
     if (!box1_correct) {
+      BoxLeftP1 = false;
+      BoxMain1 = false;
+      BoxRightP1 = false;
+      box_leftsecrowleftpremise1 = false;
+      box_leftsecrowrightpremise1 = false;
+      box_rightsecrowleftpremise1 = false;
+      box_rightsecrowrightpremise1 = false;
       setState(() => position1 = Offset(width - 80, height + 55));
     }
     if (!box2_correct) {
+      BoxLeftP2 = false;
+      BoxMain2 = false;
+      BoxRightP2 = false;
+      box_leftsecrowleftpremise2 = false;
+      box_leftsecrowrightpremise2 = false;
+      box_rightsecrowleftpremise2 = false;
+      box_rightsecrowrightpremise2 = false;
       setState(() => position2 = Offset(width - 80, height + 125));
     }
     if (!box3_correct) {
+      BoxLeftP3 = false;
+      BoxMain3 = false;
+      BoxRightP3 = false;
+      box_leftsecrowleftpremise3 = false;
+      box_leftsecrowrightpremise3 = false;
+      box_rightsecrowleftpremise3 = false;
+      box_rightsecrowrightpremise3 = false;
       setState(() => position3 = Offset(width + 50, height + 115));
     }
     if (!box4_correct) {
+      BoxLeftP4 = false;
+      BoxMain4 = false;
+      BoxRightP4 = false;
+      box_leftsecrowleftpremise4 = false;
+      box_leftsecrowrightpremise4 = false;
+      box_rightsecrowleftpremise4 = false;
+      box_rightsecrowrightpremise4 = false;
       setState(() => position4 = Offset(width + 50, height + 175));
     }
     if (!box5_correct) {
+      BoxLeftP5 = false;
+      BoxMain5 = false;
+      BoxRightP5 = false;
+      box_leftsecrowleftpremise5 = false;
+      box_leftsecrowrightpremise5 = false;
+      box_rightsecrowleftpremise5 = false;
+      box_rightsecrowrightpremise5 = false;
       setState(() => position5 = Offset(width + 30, height + 15));
     }
     if (!box6_correct) {
+      BoxLeftP6 = false;
+      BoxMain6 = false;
+      BoxRightP6 = false;
+      box_leftsecrowleftpremise6 = false;
+      box_leftsecrowrightpremise6 = false;
+      box_rightsecrowleftpremise6 = false;
+      box_rightsecrowrightpremise6 = false;
       setState(() => position6 = Offset(width + 30, height + 75));
     }
     if (!box7_correct) {
+      BoxLeftP7 = false;
+      BoxMain7 = false;
+      BoxRightP7 = false;
+      box_leftsecrowleftpremise7 = false;
+      box_leftsecrowrightpremise7 = false;
+      box_rightsecrowleftpremise7 = false;
+      box_rightsecrowrightpremise7 = false;
       setState(() => position7 = Offset(width + 30, height + 135));
     }
     if (!box8_correct) {
+      BoxLeftP8 = false;
+      BoxMain8 = false;
+      BoxRightP8 = false;
+      box_leftsecrowleftpremise8 = false;
+      box_leftsecrowrightpremise8 = false;
+      box_rightsecrowleftpremise8 = false;
+      box_rightsecrowrightpremise8 = false;
       setState(() => position8 = Offset(width + 30, height + 195));
     }
     if (box1_correct && box3_correct && box4_correct &&
         box5_correct && box6_correct && box7_correct && box8_correct) {
       _changed(false, "headingmain");
       _changed(true, "headingmaincorrect");
+      _changed(false, "submit");
+      _changed(false, "retry");
+      _changed(true, "submitgreyy");
     } else {
       _changed(true, "headingmain");
       if (retrytimes == 1) {
-        _showSnackBar("This will be your last try");
+        _showSnackBar("This was your 1st attempt out of 3");
+        _changed(false, "retry");
+        _changed(true, "submit");
       } else if (retrytimes == 2) {
-        _showSnackBar("You lose");
+        _showSnackBar("This was your 2nd attempt out of 3");
+        _changed(false, "retry");
+        _changed(true, "submit");
+      }
+      else if (retrytimes == 3) {
+        _showSnackBar("This was your last attempt. You lose");
+        _changed(false, "retry");
+        _changed(false, "submit");
+        _changed(true, "submitgreyy");
       }
     }
   }
 
-  void Submit() {
-    _changed(false, "heading1");
-    _changed(false, "heading2");
-    _changed(false, "submit");
-    _changed(true, "retry");
+  void submitgreymethod() {
+  }
 
-    if (box1_correct && box3_correct && box4_correct &&
-        box5_correct && box6_correct && box7_correct && box8_correct) {
-      _changed(true, "headingmaincorrect");
-      _changed(false, "headingmain");
-    } else {
-      _showSnackBar(
-          "You will get three tries before you lose. Take your 2nd try");
-      _changed(true, "headingmain");
+  void Submit() {
+    if (!BoxMain1 && !BoxMain2 && !BoxMain3 && !BoxMain4 && !BoxMain5 &&
+        !BoxMain6 && !BoxMain7 && !BoxMain8) {
+      _showSnackBar("Please fill all the boxes");
+    }
+    else if (!BoxLeftP1 && !BoxLeftP2 &&
+        !BoxLeftP3 && !BoxLeftP4 && !BoxLeftP5 && !BoxLeftP6 && !BoxLeftP7 &&
+        !BoxLeftP8) {
+      _showSnackBar("Please fill all the boxes");
+    }
+    else if (!BoxRightP1 && !BoxRightP2 && !BoxRightP3 && !BoxRightP4 &&
+        !BoxRightP5 && !BoxRightP6 && !BoxRightP7 && !BoxRightP8) {
+      _showSnackBar("Please fill all the boxes");
+    }
+    else if (!box_leftsecrowleftpremise1 && !box_leftsecrowleftpremise2 &&
+        !box_leftsecrowleftpremise3 && !box_leftsecrowleftpremise4
+        && !box_leftsecrowleftpremise5 && !box_leftsecrowleftpremise6 &&
+        !box_leftsecrowleftpremise7 && !box_leftsecrowleftpremise8) {
+      _showSnackBar("Please fill all the boxes");
+    } else if (!box_leftsecrowrightpremise1 && !box_leftsecrowrightpremise2 &&
+        !box_leftsecrowrightpremise3 && !box_leftsecrowrightpremise4
+        && !box_leftsecrowrightpremise5 && !box_leftsecrowrightpremise6 &&
+        !box_leftsecrowrightpremise7 && !box_leftsecrowrightpremise8) {
+      _showSnackBar("Please fill all the boxes");
+    } else if (!box_rightsecrowleftpremise1 && !box_rightsecrowleftpremise2 &&
+        !box_rightsecrowleftpremise3 && !box_rightsecrowleftpremise4
+        && !box_rightsecrowleftpremise5 && !box_rightsecrowleftpremise6 &&
+        !box_rightsecrowleftpremise7 && !box_rightsecrowleftpremise8) {
+      _showSnackBar("Please fill all the boxes");
+    }
+    else if (!box_rightsecrowrightpremise1 && !box_rightsecrowrightpremise2 &&
+        !box_rightsecrowrightpremise3 && !box_rightsecrowrightpremise4
+        && !box_rightsecrowrightpremise5 && !box_rightsecrowrightpremise6 &&
+        !box_rightsecrowrightpremise7 && !box_rightsecrowrightpremise8) {
+      _showSnackBar("Please fill all the boxes");
+    }
+    else {
+      _changed(false, "heading1");
+      _changed(false, "heading2");
+      _changed(false, "submit");
+      _changed(true, "retry");
+
+      if (box1_correct && box3_correct && box4_correct &&
+          box5_correct && box6_correct && box7_correct && box8_correct) {
+        _changed(true, "headingmaincorrect");
+        _changed(false, "headingmain");
+        _changed(false, "submit");
+        _changed(false, "retry");
+        _changed(true, "submitgreyy");
+      } else {
+        _changed(true, "headingmain");
+        _changed(false, "headingmaincorrect");
+      }
     }
   }
 
